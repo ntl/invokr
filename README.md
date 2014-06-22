@@ -50,7 +50,12 @@ def my_method arg1 = 'foo', arg2 = 'bar'
 end
 ```
 
-Without knowing how to parse the source code for `#my_method`, Invokr couldn't know what the default values are. And even if I brought in e.g. [ruby_parser](https://github.com/seattlerb/ruby_parser), I'd have to support lazy evaluation, for when you supply a method or constant as the default. This complexity is completely unneccessary when using keyword arguments, so I suggest using that approach for multiple defaults.
+Without knowing how to parse the source code for `#my_method`, Invokr couldn't know what the default values are. And even if I brought in e.g. [ruby_parser](https://github.com/seattlerb/ruby_parser), I'd have to support lazy evaluation, for when you supply a method or constant as the default. This complexity is completely unneccessary when using keyword arguments, so I suggest using that approach for multiple defaults for now.
+
+## Todo
+
+* Cleanup
+* Use the `Invokr::Method` object within the `Invokr::Builder`.
 
 ## Pre-keyword argument hash defaults
 
