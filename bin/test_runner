@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+module Invokr
+  module Runner
+    extend self
+
+    def run!
+      root = File.expand_path '../..', __FILE__
+
+      load File.join(root, 'test/test_helper.rb')
+
+      Dir[File.join(root, 'test/**/*_test.rb')].each do |test_file|
+        load test_file
+      end
+    end
+  end
+end
+
+Invokr::Runner.run!
