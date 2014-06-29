@@ -13,6 +13,13 @@ module Invokr
   end
 
   Method = Struct.new :method do
+    def invoke receiver = method.owner, hsh_args
+      unless receiver == method.owner or receiver.kind_of? method.owner
+        raise TypeError, "no implicit conversion of #{receiver.class} into #{method.owner.name}"
+      end
+      Invokr.invoke method: method.name, on: receiver, with: hsh_args
+    end
+
     def dependencies
       map_identifiers parameters
     end
