@@ -39,6 +39,11 @@ class QueryTest < Minitest::Test
     assert_equal 'no implicit conversion of Array into TestKlass', error.message
   end
 
+  def test_trimming_arguments
+    hsh = { album: 'junta', guitarist: 'trey', drummer: 'phish' }
+    assert_equal %i(album guitarist), @method.trim_args(hsh).keys
+  end
+
   private
 
   def define_test_klass
