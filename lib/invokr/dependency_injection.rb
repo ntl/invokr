@@ -9,9 +9,8 @@ module Invokr
 
     Injector = Struct.new :resolver, :klass do
       def inject
-        invocation = Builder.build initializer, self, nil
-        invocation.method = :new
-        invocation.invoke! klass
+        method = Invokr.query_method klass.instance_method :initialize
+        method.invoke method: :new, with: self
       end
 
       def keys
