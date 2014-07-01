@@ -64,6 +64,11 @@ module Invokr
       @keyword_args[identifier] = injector[identifier]
     end
 
+    def handle_rest_arg identifier
+      raise UnsupportedArgumentsError.new(self, [identifier])
+    end
+    alias_method :handle_keyrest_arg, :handle_rest_arg
+
     def handle_block_arg identifier
       if injector.has_key? identifier and @implicit_block
         unused_args << identifier and return

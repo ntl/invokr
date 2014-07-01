@@ -33,6 +33,10 @@ module TestMethodBank
     [album, guitarist]
   end
 
+  def splat_argument album = 'junta', *rest
+    [album, *rest]
+  end
+
   def just_yields
     yield
   end
@@ -45,6 +49,10 @@ module TestMethodBank
     module_eval <<-RB, __FILE__, __LINE__
       def optional_keyword_argument album: 'pitcher_of_nectar'
         album
+      end
+
+      def keyword_splat_argument album: 'pitcher_of_nectar', **rest
+        [album, **rest]
       end
     RB
   end

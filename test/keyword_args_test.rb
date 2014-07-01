@@ -29,6 +29,21 @@ module KeywordArgsTest
 
       assert_equal [:album], method.optional_dependencies
     end
+
+    def test_passing_in_splat_raises_error
+      error = assert_raises Invokr::UnsupportedArgumentsError do
+        Invokr.invoke(
+          method: :keyword_splat_argument,
+          on:     TestMethodBank,
+          with:   { guitarist: 'trey' },
+        )
+      end
+
+      assert_equal(
+        "unsupported splat argument(s) `rest' when invoking method `keyword_splat_argument' on #<TestMethodBank:0xdeadbeef>",
+        error.message,
+      )
+    end
   end
 
   class RequiredKeywordArgsTest < Minitest::Test

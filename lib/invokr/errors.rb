@@ -49,6 +49,12 @@ module Invokr
     end
   end
 
+  class UnsupportedArgumentsError < BadArgumentsError
+    def message
+      %(unsupported splat argument(s) #{formatted_args} when invoking method `#{builder.method.name}' on #{builder.method.owner.inspect})
+    end
+  end
+
   class OptionalPositionalArgumentError < StandardError
     attr :message
 
