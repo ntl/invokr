@@ -31,7 +31,11 @@ module Invokr
 
     def build_invocation
       @block_arg = @implicit_block if @implicit_block
-      Invocation.new method.name, @positional_args, @keyword_args, @block_arg
+      if method.is_a? Proc
+        Invocation.new :call, @positional_args, @keyword_args, @block_arg
+      else
+        Invocation.new method.name, @positional_args, @keyword_args, @block_arg
+      end
     end
 
     def handle_args!

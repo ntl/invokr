@@ -24,6 +24,13 @@ Invokr.invoke method: :add_transaction, on: bank_account, with: params
 
 Behind the scenes, Invokr figured out how to translate that `Hash` into a method signature compatible with `BankAccount#add_transaction`.
 
+You can also pass in procs to invokr:
+
+```ruby
+my_proc = ->|a,b| { a + b }
+Invokr.invoke proc: my_proc, with: { a: 2, b, 4 }
+```
+
 ## Querying 
 
 Want to investigate the arguments of a method?
