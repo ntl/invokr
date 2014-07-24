@@ -1,28 +1,82 @@
 module Invokr
   module DependencyInjection
-    def self.inject args = {}
-      klass = args.fetch :klass
-      resolver = args.fetch :using
-      injector = Injector.new resolver, klass
+    extend self
+
+    def inject obj, using
+      meth = case obj
+             when Proc then :inject_proc
+             when Class then :inject_klass
+             else raise ArgumentError, "can't inject #{obj.inspect}"
+             end
+      resolver = build_resolver using
+      send meth, obj, resolver
+    end
+
+    private
+
+    def build_resolver using
+      if using.is_a? Hash
+        HashResolver.new using
+      else
+        using
+      end
+    end
+
+    def inject_klass klass, resolver
+      injector = KlassInjector.new resolver, klass
       injector.inject
     end
 
-    Injector = Struct.new :resolver, :klass do
-      def inject
-        method = Invokr.query_method klass.instance_method :initialize
-        method.invoke method: :new, with: self
-      end
+    def inject_proc proc, resolver
+      injector = ProcInjector.new resolver, proc
+      injector.inject
+    end
 
+    Injector = Struct.new :resolver, :obj do
       def keys
-        initializer.parameters.map { |_, identifier| identifier }
+        method.parameters.map { |_, identifier| identifier }
       end
 
       def fetch arg, &default
         resolver.resolve arg, &default
       end
+    end
 
-      def initializer
-        klass.instance_method :initialize
+    class KlassInjector < Injector
+      def inject
+        _method = Invokr.query_method method
+        _method.invoke :method => :new, :with => self
+      end
+
+      def method
+        obj.instance_method :initialize
+      end
+    end
+
+    class ProcInjector < Injector
+      def inject
+        Invokr.invoke :proc => obj, :with => self
+      end
+
+      def method
+        obj
+      end
+    end
+
+    class HashResolver
+      def initialize hsh
+        @hsh = hsh
+      end
+
+      def inject klass
+        DependencyInjection.inject(
+          :klass => klass,
+          :using => self,
+        )
+      end
+
+      def resolve val
+        @hsh.fetch val
       end
     end
   end

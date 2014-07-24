@@ -1,33 +1,32 @@
-require 'invokr/dependency_injection'
+require 'ostruct'
 
 class DependencyInjectionExampleTest < Minitest::Test
-  def setup
-    @injector = TestInjector.new(
-      :album => 'farmhouse',
-      :guitarist => 'trey',
-      :drummer => 'fishman',
-    )
-  end
-
   def test_dependency_injection
-    @injector.inject TestObject
+    obj = Invokr.inject(
+      TestObject,
+      :using => {
+        :album => 'farmhouse',
+        :guitarist => 'trey',
+        :drummer => 'fishman',
+      },
+    )
+
+    assert_equal 'farmhouse', obj.album
+    assert_equal 'trey', obj.guitarist
   end
 
-  class TestInjector
-    def initialize hsh
-      @hsh = hsh
-    end
+  def test_injecting_a_proc
+    my_proc = -> foo do OpenStruct.new foo: foo end
 
-    def inject klass
-      Invokr::DependencyInjection.inject(
-        :klass => klass,
-        :using => self,
-      )
-    end
+    obj = Invokr.inject(
+      my_proc,
+      :using => {
+        :foo => 'bar',
+        :ping => 'pong',
+      }
+    )
 
-    def resolve val
-      @hsh.fetch val
-    end
+    assert_equal 'bar', obj.foo
   end
 
   class TestObject
