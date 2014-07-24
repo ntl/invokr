@@ -70,7 +70,20 @@ Before ruby 2.x introduced keyword arguments, it was common to end your method s
 
 ## Dependency injection
 
-One of the use cases for Invokr is building abstract factories. In this case, you want to inspect the method signature of `Object#initialize`, but actually pass `.new` to the class to have it allocate memory and invoke the initializer for you. Check out `test/dependency_injection_example_test.rb` for how it is used. You can use a hash to serve as the registry of objects, or build your own custom resolver.
+One of the use cases for Invokr is building abstract factories. In this case, you want to inspect the method signature of `Object#initialize`, but actually pass `.new` to the class to have it allocate memory and invoke the initializer for you. Check out `test/dependency_injection_example_test.rb` for how it is used. You can use a hash to serve as the registry of objects, or build your own custom resolver. Here's an example supplying a Hash as the registry:
+
+```ruby
+class MyKlass
+  attr :foo, :bar
+  def initiailze foo, bar
+    @foo, @bar = foo, bar
+  end
+end
+
+Invokr.inject MyKlass, using: { foo: 'FOO', bar: 'BAR', baz: 'BAZ' }
+```
+
+Even though `MyKlass` doesn't depend on `baz`, because everything it *did* need was present in the `using` Hash, Invokr was able to instantiate an instance of `MyKlass`
 
 ## Contributing
 
