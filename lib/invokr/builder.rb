@@ -111,8 +111,9 @@ module Invokr
     end
 
     def optional_arg_error! identifier
+      name = method.respond_to?(:name) ? method.name : 'anonymous'
       raise OptionalPositionalArgumentError.new(
-        method.name,
+        name,
         @opt_arg_name,
         identifier,
       )
