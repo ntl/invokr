@@ -75,8 +75,8 @@ module Invokr
         )
       end
 
-      def resolve val
-        @hsh.fetch val
+      def resolve val, &block
+        @hsh.fetch val, &block
       end
     end
   end
