@@ -3,9 +3,7 @@ require 'invokr'
 
 require 'minitest'
 require 'minitest/autorun'
-require 'minitest/reporters'
-
-Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
+require 'minitest/red_green'
 
 module TestMethodBank
   extend self
