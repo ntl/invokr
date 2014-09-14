@@ -40,6 +40,10 @@ module Invokr
       def fetch arg, &default
         resolver.resolve arg, &default
       end
+
+      def has_key? arg
+        resolver.could_resolve? arg
+      end
     end
 
     class KlassInjector < Injector
@@ -77,6 +81,10 @@ module Invokr
 
       def resolve val, &block
         @hsh.fetch val, &block
+      end
+
+      def could_resolve? val
+        @hsh.has_key? val
       end
     end
   end

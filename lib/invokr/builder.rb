@@ -65,7 +65,7 @@ module Invokr
 
     def handle_key_arg identifier
       return unless injector.has_key? identifier
-      @keyword_args[identifier] = injector[identifier]
+      @keyword_args[identifier] = injector.fetch identifier do nil end
     end
 
     def handle_rest_arg identifier

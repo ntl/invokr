@@ -32,7 +32,7 @@ class DependencyInjectionExampleTest < Minitest::Test
   class TestObject
     attr :album, :guitarist
 
-    def initialize album, guitarist
+    def initialize album, guitarist: 'jimmy'
       @album = album
       @guitarist = guitarist
     end
