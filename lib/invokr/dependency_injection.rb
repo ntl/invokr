@@ -49,7 +49,7 @@ module Invokr
     class KlassInjector < Injector
       def inject
         _method = Invokr.query_method method
-        _method.invoke :method => :new, :with => self
+        _method.invoke :method => :new, :receiver => obj, :with => self
       end
 
       def method
