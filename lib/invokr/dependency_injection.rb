@@ -4,7 +4,7 @@ module Invokr
 
     def inject obj, using
       meth = case obj
-             when Proc then :inject_proc
+             when -> (obj) { obj.respond_to?(:call) } then :inject_proc
              when Class then :inject_klass
              else raise ArgumentError, "can't inject #{obj.inspect}"
              end

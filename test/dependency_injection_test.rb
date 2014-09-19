@@ -16,17 +16,32 @@ class DependencyInjectionExampleTest < Minitest::Test
   end
 
   def test_injecting_a_proc
-    my_proc = -> foo do OpenStruct.new foo: foo end
+    my_proc = -> (foo,bar) do OpenStruct.new foo: foo, bar: bar end
 
     obj = Invokr.inject(
       my_proc,
       :using => {
         :foo => 'bar',
+        :bar => 'baz',
         :ping => 'pong',
       }
     )
 
     assert_equal 'bar', obj.foo
+    assert_equal 'baz', obj.bar
+  end
+
+  def test_injecting_proc_duck_type
+    obj = Invokr.inject(
+      TestProcDuckType.new,
+      :using => {
+        :foo => 'FOO',
+        :bar => 'BAZ',
+      },
+    )
+
+    assert_equal 'FOO', obj.foo
+    assert_equal 'BAZ', obj.bar
   end
 
   class TestObject
@@ -35,6 +50,16 @@ class DependencyInjectionExampleTest < Minitest::Test
     def initialize album, guitarist: 'jimmy'
       @album = album
       @guitarist = guitarist
+    end
+  end
+
+  class TestProcDuckType
+    def parameters
+      [[:req, :foo],[:req, :bar]]
+    end
+
+    def call(foo, bar)
+      OpenStruct.new foo: foo, bar: bar
     end
   end
 end
