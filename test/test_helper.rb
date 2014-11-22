@@ -43,7 +43,7 @@ module TestMethodBank
     "#<#{name}:0xdeadbeef>"
   end
 
-  if RUBY_VERSION >= '2.0'
+  if RUBY_VERSION >= '2.0'  and RUBY_ENGINE == 'ruby'
     module_eval <<-RB, __FILE__, __LINE__
       def optional_keyword_argument album: 'pitcher_of_nectar'
         album
@@ -55,7 +55,7 @@ module TestMethodBank
     RB
   end
 
-  if RUBY_VERSION >= '2.1'
+  if RUBY_VERSION >= '2.1' and RUBY_ENGINE == 'ruby'
     module_eval <<-RB, __FILE__, __LINE__
       def required_keyword_argument(album:)
         album

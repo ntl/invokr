@@ -16,7 +16,7 @@ class DependencyInjectionExampleTest < Minitest::Test
   end
 
   def test_injecting_a_proc
-    my_proc = -> (foo,bar) do OpenStruct.new foo: foo, bar: bar end
+    my_proc = lambda { |foo,bar| OpenStruct.new foo: foo, bar: bar }
 
     obj = Invokr.inject(
       my_proc,
@@ -47,7 +47,7 @@ class DependencyInjectionExampleTest < Minitest::Test
   class TestObject
     attr :album, :guitarist
 
-    def initialize album, guitarist: 'jimmy'
+    def initialize album, guitarist = 'jimmy'
       @album = album
       @guitarist = guitarist
     end

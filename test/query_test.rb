@@ -49,7 +49,7 @@ class QueryTest < Minitest::Test
 
   def test_trimming_arguments
     hsh = { album: 'junta', guitarist: 'trey', drummer: 'phish' }
-    assert_equal %i(album guitarist), @method.trim_args(hsh).keys
+    assert_equal [:album, :guitarist], @method.trim_args(hsh).keys
   end
 
   private

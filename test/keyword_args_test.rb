@@ -1,7 +1,7 @@
 module KeywordArgsTest
   class OptionalKeywordArgsTest < Minitest::Test
     def setup
-      skip unless RUBY_VERSION >= '2.0'
+      skip unless RUBY_VERSION >= '2.0' and RUBY_ENGINE == 'ruby'
     end
 
     def test_overriding_optional_keyword_argument
@@ -48,7 +48,7 @@ module KeywordArgsTest
 
   class RequiredKeywordArgsTest < Minitest::Test
     def setup
-      skip unless RUBY_VERSION >= '2.1'
+      skip unless RUBY_VERSION >= '2.0' and RUBY_ENGINE == 'ruby'
     end
 
     def test_supplying_required_keyword_argument
