@@ -58,7 +58,7 @@ class DependencyInjectionExampleTest < Minitest::Test
       [[:req, :foo],[:req, :bar]]
     end
 
-    def call(foo, bar)
+    def call foo, bar
       OpenStruct.new foo: foo, bar: bar
     end
   end
