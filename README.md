@@ -31,6 +31,14 @@ my_proc = ->|a,b| { a + b }
 Invokr.invoke proc: my_proc, with: { a: 2, b, 4 }
 ```
 
+## Using vs. With
+
+If you supply arguments that the method doesn't know how to handle, an `Invokr::ExtraArgumentsError` is raised. This is because, in general, you can't supply extra arguments to a plain old ruby method. However, from time to time we want to be able to pass in extra arguments. You can use the `using` keyword in order to simulate the behavior of the splat (`*`) operator:
+
+```ruby
+Invokr.invoke method: :add_transaction, on: bank_account, with: { amount: 12.34, account_id: 24, extra_arg: 'hey, there' }
+```
+
 ## Querying 
 
 Want to investigate the arguments of a method?
@@ -59,11 +67,6 @@ end
 
 Without knowing how to parse the source code for `#my_method`, Invokr couldn't know what the default values are. And even if I brought in e.g. [ruby_parser](https://github.com/seattlerb/ruby_parser), I'd have to support lazy evaluation, for when you supply a method or constant as the default. This complexity is completely unneccessary when using keyword arguments, so I suggest using that approach for multiple defaults for now.
 
-## Todo
-
-* Cleanup
-* Use the `Invokr::Method` object within the `Invokr::Builder`.
-
 ## Pre-keyword argument hash defaults
 
 Before ruby 2.x introduced keyword arguments, it was common to end your method signature with a default hash, e.g. `def my_method args = {}`. Invoker supports this by building a Hash out of all the unused arguments you passed in, and passing *that* into the optional argument.
@@ -84,6 +87,11 @@ Invokr.inject MyKlass, using: { foo: 'FOO', bar: 'BAR', baz: 'BAZ' }
 ```
 
 Even though `MyKlass` doesn't depend on `baz`, because everything it *did* need was present in the `using` Hash, Invokr was able to instantiate an instance of `MyKlass`
+
+## Todo
+
+* Cleanup
+* Use the `Invokr::Method` object within the `Invokr::Builder`.
 
 ## Contributing
 

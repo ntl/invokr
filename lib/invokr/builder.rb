@@ -7,12 +7,13 @@ module Invokr
 
     attr :argument_names, :injector, :method, :missing_args, :unused_args
 
-    def initialize method, injector, implicit_block
+    def initialize method, injector, implicit_block, allow_unused = false
       @argument_names = method.parameters.map &:last
       @injector = injector
       @method = method
       @opt_arg_name = nil
 
+      @allow_unused = allow_unused
       @block_arg = nil
       @implicit_block = implicit_block
       @keyword_args = {}
@@ -24,7 +25,7 @@ module Invokr
 
     def build
       handle_args!
-      check_for_unused_args!
+      check_for_unused_args! unless @allow_unused
       check_for_missing_args!
       build_invocation
     end

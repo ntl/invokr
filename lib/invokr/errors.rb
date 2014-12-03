@@ -4,7 +4,7 @@ module Invokr
 
     def initialize missing_args
       @missing_args = missing_args
-      missing_args.map! do |arg| "`#{arg}'" end
+      missing_args.map! do |arg| display arg end
     end
 
     def message
@@ -21,6 +21,13 @@ module Invokr
       return missing_args.first if missing_args.size == 1
       last_arg = missing_args.pop
       "#{missing_args.join ', '} and #{last_arg}"
+    end
+
+    def display arg
+      list = Array(arg).map do |arg| "`#{arg}'" end
+      str = list * " or "
+      str.insert 0, "either " if list.size > 1
+      str
     end
   end
 

@@ -30,25 +30,30 @@ module Invokr
   private
 
   def invoke_method args = {}
-    method_name, obj, hsh_args = require_arguments! args, :method, :on, :with
+    method_name, obj, hsh_args = require_arguments! args, :method, :on, [:with, :using]
+    allow_unused = args.has_key? :using
     method = obj.method method_name
-    invocation = Builder.build method, hsh_args, args[:block]
+    invocation = Builder.build method, hsh_args, args[:block], allow_unused
     invocation.invoke! obj
   end
 
   def invoke_proc _proc, args = {}
-    hsh_args = require_arguments! args, :with
-    invocation = Builder.build _proc, hsh_args, args[:block]
+    hsh_args = require_arguments! args, [:with, :using]
+    allow_unused = args.has_key? :using
+    invocation = Builder.build _proc, hsh_args, args[:block], allow_unused
     obj = SimpleDelegator.new _proc
     invocation.invoke! obj
   end
 
   def require_arguments! hsh, *args
     found_args, missing_args = args.partition do |arg|
-      hsh.has_key? arg
+      Array(arg).any? &hsh.method(:has_key?)
     end
     raise InputError.new missing_args unless missing_args.empty?
-    list = found_args.map { |arg| hsh.fetch arg }
+    list = found_args.map do |arg|
+      pair = hsh.detect do |k,_| Array(arg).include? k end
+      pair.fetch 1
+    end
     args.size == 1 ? list.first : list
   end
 end
