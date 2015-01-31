@@ -61,5 +61,9 @@ class DependencyInjectionExampleTest < Minitest::Test
     def call foo, bar
       OpenStruct.new foo: foo, bar: bar
     end
+
+    def to_proc
+      method :call
+    end
   end
 end

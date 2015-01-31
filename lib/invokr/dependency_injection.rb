@@ -4,7 +4,7 @@ module Invokr
 
     def inject obj, using
       meth = case obj
-             when lambda { |obj| obj.respond_to?(:call) } then :inject_proc
+             when lambda { |obj| proc? obj } then :inject_proc
              when Class then :inject_klass
              else raise ArgumentError, "can't inject #{obj.inspect}"
              end
@@ -30,6 +30,10 @@ module Invokr
     def inject_proc proc, resolver
       injector = ProcInjector.new resolver, proc
       injector.inject
+    end
+
+    def proc? object
+      object.respond_to? :call and object.respond_to? :to_proc
     end
 
     Injector = Struct.new :resolver, :obj do
